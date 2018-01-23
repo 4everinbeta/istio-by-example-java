@@ -2,12 +2,14 @@
 
 You'll need a [Google Cloud Platform account](https://cloud.google.com/), a [Project](https://cloud.google.com/resource-manager/docs/creating-managing-projects), and [gcloud SDK](https://cloud.google.com/sdk/).
 
-First, create a new Kubernetes cluster with alpha features to take advantage of Kubernetes initializer.
+First, enable the Kubernetes Engine API is not enabled for your project. Please ensure it is enabled in the Google Cloud Console at https://console.cloud.google.com/apis/api/container.googleapis.com/overview?project=<project_id>
+
+Next, create a new Kubernetes cluster with alpha features to take advantage of Kubernetes initializer. (Must have paid subscription)
 ```
 $ export ISTIO_PROJECT_ID=$(gcloud config get-value core/project)
 $ gcloud --project=$ISTIO_PROJECT_ID alpha container clusters create istio-cluster \
   --zone=us-central1-c --num-nodes=4 --machine-type=n1-standard-4 \
-  --cluster-version=1.7.8-gke.0 --enable-kubernetes-alpha
+  --cluster-version=1.7.11-gke.1 --enable-kubernetes-alpha
 ```
 
 Once the cluster was created, make sure your user account has admin role within the Kubernetes cluster:
@@ -21,7 +23,7 @@ Install Istio CLI:
 ```
 $ cd ~/
 $ curl -L https://git.io/getLatestIstio | sh -
-$ export PATH="$PATH:$HOME/istio-0.2.7/bin"
+$ export PATH="$PATH:$HOME/istio-0.4.0/bin"
 ```
 
 Install Istio Service Mesh in Kubernetes:
@@ -95,3 +97,9 @@ $ kubectl -n istio-system port-forward $(kubectl -n istio-system get pod -l app=
 ```
 
 Browse to http://localhost:8088/dotviz
+
+###Killing it all
+```
+$ gcloud --project=$ISTIO_PROJECT_ID alpha container clusters delete istio-cluster \
+  --zone=us-central1-c
+```
